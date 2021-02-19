@@ -2,7 +2,7 @@ from KG import simulate, KG_score, opt_KG_score
 from LP import simulate_LP
 import threading
 
-T, alpha = 5, 1/4
+T, alpha = 8, 1/4
 
 KG = open("KG.txt", "w+")
 opt_KG = open("opt-KG.txt", "w+")

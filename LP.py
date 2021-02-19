@@ -85,7 +85,7 @@ def to_category(X, Y, Z):
                 continue
     return HP, MP, LP
 
-def simulate_LP(T, alpha, N, M, file):
+def simulate_LP(T, alpha, N, M):
     start = time.time()
     def reward(a, b):
         if a < b:
@@ -138,7 +138,5 @@ def simulate_LP(T, alpha, N, M, file):
         rewards.append(sum(reward(s[0], s[1]) * current_state[s] for s in current_state))
 
     end = time.time()
-    f = open(file, 'a')
     mean, std = np.mean(rewards), np.std(rewards) / np.sqrt(M)
-    f.write(f"N:{N} M:{M} mean:{mean} std:{std} time:{end - start}\n")
-    f.close()
+    return N, M, mean, std, end - start

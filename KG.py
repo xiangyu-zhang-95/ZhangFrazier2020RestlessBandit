@@ -2,25 +2,31 @@ from scipy.stats import beta
 import numpy as np
 import collections
 import time
+from functools import lru_cache
 
+@lru_cache(None)
 def I(a, b):
     return beta.cdf(1/2, a, b)
 
 def h(x):
     return max(x, 1 - x)
 
+@lru_cache(None)
 def R1(a, b):
     return h(I(a + 1, b)) - h(I(a, b))
 
+@lru_cache(None)
 def R2(a, b):
     return h(I(a, b + 1)) - h(I(a, b))
 
+@lru_cache(None)
 def opt_KG_score(a, b):
     """
     KG score function
     """
     return max(R1(a, b), R2(a, b))
 
+@lru_cache(None)
 def KG_score(a, b):
     return a / (a + b) * R1(a, b) + b / (a + b) * R2(a, b)
 
@@ -56,7 +62,7 @@ def opt_KG_policy(T, alpha):
 def KG_policy(T, alpha):
     return Priority_policy(T=T, score=KG_score, alpha=alpha, initial=collections.defaultdict(float, {(0, 0): 1.0}))
 
-def simulate(T, alpha, N, M, score, file):
+def simulate_KG(T, alpha, N, M, score):
     start = time.time()
     rewards = []
     for _ in range(M):
@@ -80,8 +86,5 @@ def simulate(T, alpha, N, M, score, file):
             return 1 - beta.cdf(1/2, a + 1, b + 1)
         rewards.append(sum([curr_state[s] * reward(s[0], s[1]) for s in curr_state]))
     end = time.time()
-    f = open(file, 'a')
     mean, std = np.mean(rewards), np.std(rewards) / np.sqrt(M)
-    f.write(f"N:{N} M:{M} mean:{mean} std:{std} time:{end - start}\n")
-    f.close()
-
+    return N, M, mean, std, end - start
