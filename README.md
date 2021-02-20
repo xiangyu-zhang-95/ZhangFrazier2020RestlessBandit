@@ -1,3 +1,3 @@
 # ZhangFrazier2020RestlessBandit
 
-This repo shares the code which generating plots in my restless bandit paper.
+This repo shares code which generates plots in my restless bandit paper.
